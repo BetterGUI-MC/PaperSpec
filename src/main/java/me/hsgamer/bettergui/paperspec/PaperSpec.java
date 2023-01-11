@@ -37,7 +37,7 @@ public final class PaperSpec extends PluginAddon {
 
     @Override
     public void onEnable() {
-        ItemModifierBuilder.INSTANCE.register(PaperSkullModifier::new, "paper-skull", "paper-head");
+        ItemModifierBuilder.INSTANCE.register(PaperSkullModifier::new, "paper-skull", "paper-head", "skull$", "head$");
         ItemModifierBuilder.INSTANCE.register(AdventureNameModifier::new, "mini-name", "name$");
         ItemModifierBuilder.INSTANCE.register(AdventureLoreModifier::new, "mini-lore", "lore$");
 
