@@ -46,9 +46,10 @@ public final class PaperSpec extends PluginAddon {
             InventoryType type = holder.getInventoryType();
             int size = holder.getSize(uuid);
 
-            // MiniMessage deserializer will throw a runtime exception
-            // if the string contains any legacy color codes (&1, &b).
+            // Adventure Text Component API will throw a runtime exception
+            // if the content string contains any legacy Mojang color codes.
             // So we strip it in case the menu fails to be loaded.
+            // See: https://github.com/KyoriPowered/adventure/blob/529d407d55ca50e6dee10f5696063f97e34ae9b5/api/src/main/java/net/kyori/adventure/text/TextComponentImpl.java#L40
             String title = ChatColor.stripColor(holder.getTitle(uuid));
 
             Component adventure$title = AdventureUtils.toComponent(title);
