@@ -53,7 +53,7 @@ public class AdventureUtils {
             TagResolver tagResolver = MiniPlaceholders.audienceGlobalPlaceholders();
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
-                return MiniMessage.miniMessage().deserialize(mini, tagResolver);
+                return MiniMessage.miniMessage().deserialize(mini, player, tagResolver);
             }
         }
         return MiniMessage.miniMessage().deserialize(mini);
