@@ -16,10 +16,22 @@ import java.util.UUID;
 
 public class AdventureUtils {
     private static final TextDecorationAndState ITALIC_OFF = TextDecoration.ITALIC.withState(TextDecoration.State.FALSE);
-    private static final boolean IS_MINI_PLACEHOLDERS_INSTALLED;
+    private static final boolean IS_MINI_PLACEHOLDERS_SUPPORTED;
 
     static {
-        IS_MINI_PLACEHOLDERS_INSTALLED = Bukkit.getPluginManager().getPlugin("MiniPlaceholders") != null;
+        boolean isMiniPlaceholdersSupported = false;
+        if (Bukkit.getPluginManager().getPlugin("MiniPlaceholders") != null) {
+            try {
+                Class<?> clazz = Class.forName("io.github.miniplaceholders.api.MiniPlaceholders");
+                clazz.getDeclaredMethod("audienceGlobalPlaceholders");
+                Class<?> pointerClass = Class.forName("net.kyori.adventure.pointer.Pointered");
+                MiniMessage.class.getDeclaredMethod("deserialize", String.class, pointerClass, TagResolver.class);
+                isMiniPlaceholdersSupported = true;
+            } catch (Exception e) {
+                // IGNORE
+            }
+        }
+        IS_MINI_PLACEHOLDERS_SUPPORTED = isMiniPlaceholdersSupported;
     }
 
     private AdventureUtils() {
@@ -37,15 +49,12 @@ public class AdventureUtils {
     }
 
     public static @NotNull Component toComponent(UUID uuid, @NotNull String mini) {
-        if (IS_MINI_PLACEHOLDERS_INSTALLED) {
-            TagResolver tagResolver = MiniPlaceholders.getGlobalPlaceholders();
-
+        if (IS_MINI_PLACEHOLDERS_SUPPORTED) {
+            TagResolver tagResolver = MiniPlaceholders.audienceGlobalPlaceholders();
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
-                tagResolver = TagResolver.resolver(tagResolver, MiniPlaceholders.getAudiencePlaceholders(player));
+                return MiniMessage.miniMessage().deserialize(mini, tagResolver);
             }
-
-            return MiniMessage.miniMessage().deserialize(mini, tagResolver);
         }
         return MiniMessage.miniMessage().deserialize(mini);
     }
